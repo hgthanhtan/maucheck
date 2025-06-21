@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Mẫu Chữ Đẹp - Social Media Text Generator</title>
+    <style>
+        /* --- style.css start --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1000px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #0056b3;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 25px;
+            font-size: 1.1em;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        textarea {
+            width: calc(100% - 30px); /* Adjust for padding */
+            padding: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            font-size: 1.1em;
+            resize: vertical;
+            min-height: 100px;
+            max-height: 250px;
+            margin: 0 auto;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            align-self: center;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+        }
+
+        button:hover {
+            background-color: #218838;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+            gap: 25px;
+            text-align: left;
+        }
+
+        .output-card {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #dee2e6;
+            word-wrap: break-word;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Pushes content to top and bottom */
+        }
+
+        .output-card h3 {
+            color: #495057;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 600;
+            border-bottom: 1px dashed #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .output-content {
+            min-height: 80px; /* Ensure consistent height for cards */
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #2b2d42;
+            white-space: pre-wrap; /* Preserve whitespace and line breaks for templates */
+            font-family: 'Segoe UI Historic', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif; /* Fallback for unicode chars */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            button {
+                padding: 12px 25px;
+                font-size: 1.1em;
+            }
+
+            .output-grid {
+                grid-template-columns: 1fr; /* Single column on small screens */
+            }
+
+            .output-card {
+                padding: 20px;
+            }
+
+            .output-card h3 {
+                font-size: 1.2em;
+            }
+
+            .output-content {
+                font-size: 1em;
+            }
+        }
+        /* --- style.css end --- */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tạo Mẫu Chữ Đẹp Cho Mạng Xã Hội</h1>
+        <p>Nhập nội dung của bạn vào ô dưới đây và xem các mẫu trang trí!</p>
+        <div class="input-section">
+            <textarea id="inputText" placeholder="Ví dụ: Dịch vụ tăng tương tác uy tín!" rows="4"></textarea>
+            <button id="applyButton">Tạo Mẫu Ngay</button>
+        </div>
+
+        <div id="outputContainer" class="output-grid">
+            </div>
+    </div>
+
+    <script>
+        /* --- script.js start --- */
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputText = document.getElementById('inputText');
+            const applyButton = document.getElementById('applyButton');
+            const outputContainer = document.getElementById('outputContainer');
+
+            // Default text for initial load
+            inputText.value = "Dịch vụ tăng tương tác";
+
+            // Function to convert text to various Unicode styles
+            function convertToUnicode(text, type) {
+                let convertedText = '';
+                for (let i = 0; i < text.length; i++) {
+                    const char = text[i];
+                    const charCode = char.charCodeAt(0);
+
+                    // Only convert basic Latin alphabet (a-z, A-Z) and numbers (0-9)
+                    // Vietnamese accented characters and other symbols will be kept as is.
+                    if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122)) { // Letters A-Z, a-z
+                        switch (type) {
+                            case 'cursive': // 𝓬𝓱𝓾̛̃ 𝓽𝓱𝓪̉𝓸 (Mathematical Script Bold Italic)
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1D49F + (charCode - 65));
+                                } else { // a-z
+                                    convertedText += String.fromCodePoint(0x1D4B6 + (charCode - 97));
+                                }
+                                break;
+                            case 'bold-italic': // 𝙄𝙣 𝙙𝙖̣̂𝙢 (Mathematical Bold Italic)
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1D468 + (charCode - 65));
+                                } else { // a-z
+                                    convertedText += String.fromCodePoint(0x1D482 + (charCode - 97));
+                                }
+                                break;
+                            case 'small-caps': // ᴄʜᴜ̛̃ ʜᴏᴀ ɴʜᴏ̉ (Small Caps Unicode) - Not perfect for all, requires specific characters
+                                const smallCapsMap = {
+                                    'A': 'ᴀ', 'B': 'ʙ', 'C': 'ᴄ', 'D': 'ᴅ', 'E': 'ᴇ', 'F': 'ꜰ', 'G': 'ɢ', 'H': 'ʜ', 'I': 'ɪ', 'J': 'ᴊ', 'K': 'ᴋ', 'L': 'ʟ', 'M': 'ᴍ', 'N': 'ɴ', 'O': 'ᴏ', 'P': 'ᴘ', 'Q': 'ꞯ', 'R': 'ʀ', 'S': 'ꜱ', 'T': 'ᴛ', 'U': 'ᴜ', 'V': 'ᴠ', 'W': 'ᴡ', 'X': 'x', 'Y': 'ʏ', 'Z': 'ᴢ',
+                                    'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ꜰ', 'f': 'ꜰ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ', 'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ', 'p': 'ᴘ', 'q': 'ꞯ', 'r': 'ʀ', 's': 'ꜱ', 't': 'ᴛ', 'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ'
+                                };
+                                convertedText += smallCapsMap[char] || char;
+                                break;
+                            case 'bold': // 𝐁𝐨𝐥𝐝 (Mathematical Bold)
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1D400 + (charCode - 65));
+                                } else { // a-z
+                                    convertedText += String.fromCodePoint(0x1D41A + (charCode - 97));
+                                }
+                                break;
+                            case 'double-struck': // 𝔻𝕠𝕦𝕓𝕝𝕖-𝕊𝕥𝕣𝕦𝕔𝕜
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1D538 + (charCode - 65));
+                                } else if (charCode >= 48 && charCode <= 57) { // 0-9
+                                    convertedText += String.fromCodePoint(0x1D560 + (charCode - 48));
+                                } else { // a-z
+                                    convertedText += String.fromCodePoint(0x1D552 + (charCode - 97));
+                                }
+                                break;
+                            case 'monospace': // 𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1D670 + (charCode - 65));
+                                } else { // a-z
+                                    convertedText += String.fromCodePoint(0x1D68A + (charCode - 97));
+                                }
+                                break;
+                            case 'fraktur': // 𝔉𝔯𝔞𝔨𝔱𝔲𝔯
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1D504 + (charCode - 65));
+                                } else { // a-z
+                                    convertedText += String.fromCodePoint(0x1D51E + (charCode - 97));
+                                }
+                                break;
+                            case 'bold-fraktur': // 𝕲𝖔𝖙𝖍𝖎𝖈 (Mathematical Bold Fraktur)
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1D56C + (charCode - 65));
+                                } else { // a-z
+                                    convertedText += String.fromCodePoint(0x1D586 + (charCode - 97));
+                                }
+                                break;
+                            case 'sans-serif': // 𝖠𝖫𝖫 𝖲𝖠𝖭𝖲-𝖲𝖤𝖱𝖨𝖥
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1D5A0 + (charCode - 65));
+                                } else { // a-z
+                                    convertedText += String.fromCodePoint(0x1D5BA + (charCode - 97));
+                                }
+                                break;
+                            case 'bold-sans-serif': // 𝗔𝗟𝗟 𝗕𝗢𝗟𝗗 𝗦𝗔𝗡𝗦-𝗦𝗘𝗥𝗜𝗙
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1D5D4 + (charCode - 65));
+                                } else { // a-z
+                                    convertedText += String.fromCodePoint(0x1D5EE + (charCode - 97));
+                                }
+                                break;
+                            case 'italic-sans-serif': // 𝘈𝘓𝘓 𝘐𝘛𝘈𝘓𝘐𝘊 𝘚𝘈𝘕𝘚-𝘚𝘌𝘙𝘐𝘍
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1D608 + (charCode - 65));
+                                } else { // a-z
+                                    convertedText += String.fromCodePoint(0x1D622 + (charCode - 97));
+                                }
+                                break;
+                            case 'bold-italic-sans-serif': // 𝘼𝙇𝙇 𝘽𝙊𝙇𝘿 𝙄𝙏𝘼𝙇𝙄𝘾 𝙎𝘼𝙉𝙎-𝙎𝙀𝙍𝙄𝙁
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1D63C + (charCode - 65));
+                                } else { // a-z
+                                    convertedText += String.fromCodePoint(0x1D656 + (charCode - 97));
+                                }
+                                break;
+                            case 'upside-down': // lɐɯɹoN uʍop-ǝpısd∩
+                                const upsideDownMap = {
+                                    'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ı', 'j': 'ɾ', 'k': 'ʞ', 'l': 'l', 'm': 'ɯ', 'n': 'u', 'o': 'o', 'p': 'd', 'q': 'b', 'r': 'ɹ', 's': 's', 't': 'ʇ', 'u': 'n', 'v': 'ʌ', 'w': 'ʍ', 'x': 'x', 'y': 'ʎ', 'z': 'z',
+                                    'A': '∀', 'B': '𐐒', 'C': 'Ↄ', 'D': '◖', 'E': 'Ǝ', 'F': 'Ⅎ', 'G': '⅁', 'H': 'H', 'I': 'I', 'J': 'ſ', 'K': '⋊', 'L': '˥', 'M': 'W', 'N': 'N', 'O': 'O', 'P': 'Ԁ', 'Q': 'Q', 'R': 'ᴚ', 'S': 'S', 'T': '⊥', 'U': '∩', 'V': 'Λ', 'W': 'M', 'X': 'X', 'Y': '⅄', 'Z': 'Z',
+                                    '.': '˙', ',': "'", '?': '¿', '!': '¡', "'": ',', '"': ',,', '(': ')', ')': '(', '[': ']', ']': '[', '{': '}', '}': '{', '<': '>', '>': '<', '&': '⅋', '_': '‾', ';': '؛', '~': '∼'
+                                };
+                                convertedText += upsideDownMap[char] || char; // Fallback for unmatched chars
+                                break;
+                            case 'bubble': // Ⓑⓤⓑⓑⓛⓔ
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x24B6 + (charCode - 65));
+                                } else if (charCode >= 97 && charCode <= 122) { // a-z
+                                    convertedText += String.fromCodePoint(0x24D0 + (charCode - 97));
+                                } else if (charCode >= 48 && charCode <= 57) { // 0-9
+                                    convertedText += String.fromCodePoint(0x2460 + (charCode - 48));
+                                } else {
+                                    convertedText += char;
+                                }
+                                break;
+                            case 'square': // 🄀🄁🄂🄃🄄🄅
+                                if (charCode >= 65 && charCode <= 90) { // A-Z
+                                    convertedText += String.fromCodePoint(0x1F130 + (charCode - 65));
+                                } else if (charCode >= 97 && charCode <= 122) { // a-z
+                                    convertedText += String.fromCodePoint(0x1F130 + (charCode - 97)); // Reusing same range for simplicity
+                                } else {
+                                    convertedText += char;
+                                }
+                                break;
+                            default:
+                                convertedText += char;
+                        }
+                    } else if (charCode >= 48 && charCode <= 57) { // Numbers 0-9
+                        switch (type) {
+                            case 'bold':
+                                convertedText += String.fromCodePoint(0x1D7CE + (charCode - 48));
+                                break;
+                            case 'double-struck':
+                                convertedText += String.fromCodePoint(0x1D7D8 + (charCode - 48));
+                                break;
+                            case 'monospace':
+                                convertedText += String.fromCodePoint(0x1D7E2 + (charCode - 48));
+                                break;
+                            case 'sans-serif':
+                                convertedText += String.fromCodePoint(0x1D7EC + (charCode - 48));
+                                break;
+                            case 'bold-sans-serif':
+                                convertedText += String.fromCodePoint(0x1D7F6 + (charCode - 48));
+                                break;
+                            case 'bubble': // ⓿
+                                convertedText += String.fromCodePoint(0x24EA + (charCode - 48));
+                                break;
+                            default:
+                                convertedText += char;
+                        }
+                    } else {
+                        convertedText += char; // Keep non-alphanumeric (like Vietnamese characters with accents) and other symbols as is
+                    }
+                }
+                return convertedText;
+            }
+
+            // Function to generate the HTML for a single text sample
+            function createSampleCard(title, content) {
+                const card = document.createElement('div');
+                card.classList.add('output-card');
+
+                const h3 = document.createElement('h3');
+                h3.textContent = title;
+                card.appendChild(h3);
+
+                const p = document.createElement('p');
+                p.classList.add('output-content');
+                p.innerHTML = content.replace(/\n/g, '<br>'); // Replace newlines with <br> for HTML display
+                card.appendChild(p);
+
+                return card;
+            }
+
+            // Function to render all text samples
+            function renderSamples() {
+                const userInput = inputText.value;
+                outputContainer.innerHTML = ''; // Clear previous output
+
+                // Định nghĩa 20 mẫu quảng cáo hoàn chỉnh có chèn nội dung của người dùng
+                const samples = [
+                    {
+                        title: "Rosy Media (Chữ Thảo)",
+                        template: `                 ┊ ┊ ┊ ┊ ┊ ┊
+                 ┊ ┊ ┊ ┊ ˚✩ ⋆｡˚ ✩
+                 ┊ ┊ ┊ ✫
+                 ┊ ┊ ✩
+                 ┊ ⊹ ✯
+                 ✯
+
+             💖 𝓡𝓸𝓼𝔂 𝓜𝓮𝓭𝓲𝓪 - ${convertToUnicode(userInput, 'cursive')} 💖
+               ˙✧˖°⋆｡˚⟡ ݁₊ ౨ৎ⋆✴︎˚｡⋆
+
+         ﹒˚ ₊ ︵﹒⊹ ๑ 🎀 𝐂𝐇𝐔𝐘𝐄̂̉𝐍 𝐊𝐇𝐎𝐀̉𝐍 🎀 ๑ ⊹︵
+         ╭────── · · ୨୧ · · ──────╮
+           🌸 MB Bank: 275887 🌸
+         ╰────── · · ୨୧ · · ──────╯
+
+         ﹒˚ ₊ ︵﹒⊹ ๑ ₊˚🌸 𝐃𝐈̣𝐂𝐇 𝐕𝐔̣ 𝐂𝐇𝐈́𝐍𝐇 🌸 ๑ ⊹﹒︵
+         ╭────── · · ୨୧ · · ──────╮
+           👑 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 👑
+          𝑭𝒂𝒄𝒆𝒃𝒐𝒐𝒌 - 𝑻𝒊𝒌𝒕𝒐𝒌
+         ╰────── · · ୨୧ · · ──────╯
+
+         ﹒˚ ₊ ︵﹒⊹ ๑ ₊˚🌸 𝐃𝐈̣𝐂𝐇 𝐕𝐔̣ 𝐁𝐎̂̉ 𝐒𝐔𝐍𝐆 🌸 ๑ ⊹﹒︵
+         ╭────── · · ୨୧ · · ──────╮
+           ✨ 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 - 𝑽𝒊𝒆𝒘 ✨
+           𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+         ╰────── · · ୨୧ · · ──────╯
+
+                 ˚ 𝜗𝜚˚⋆ 𝕷𝖚̛𝖚 𝖄́ 𓆝⋆ ๋༘ ࣭
+                 𐙚₊˚ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ୨୧
+          ౨ৎ˚𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+              𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎`
+            },
+            {
+                title: "Social Boost Pro (Bold)",
+                template: `      ╔═════*.·:·.✧ ✦ ✧.·:·.*═════╗
+      🚀 𝕊𝕠𝕔𝕚𝕒𝕝 𝔹𝕠𝕠𝕤𝕥 ℙ𝕣𝕠 - ${convertToUnicode(userInput, 'bold')} 🚀
+      ╚═════*.·:·.✧ ✦ ✧.·:·.*═════╝
+
+                 💸 𝗖𝗛𝗨𝗬𝗘̂̉𝗡 𝗞𝗛𝗢𝗔̉𝗡 𝗡𝗛𝗔𝗡𝗛 𝗚𝗢̣𝗡 💸
+                 ┄─━ ࿇ ━─┄
+                 MB Bank: 275887
+                 ┄─━ ࿇ ━─┄
+
+                 📈 𝗗𝗜̣𝗖𝗛 𝗩𝗨̣ Đ𝗢̣̂𝗖 𝗤𝗨𝗬Ề𝗡 📈
+                 ┄─━ ࿇ ━─┄
+                 💎 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 💎
+                 𝙁𝙖𝙘𝙚𝙗𝙤𝙤𝙠 - 𝙏𝙞𝙠𝙩𝙤𝙠
+                 ┄─━ ࿇ ━─┄
+
+                 📊 𝗧𝗔̆𝗡𝗚 𝗧𝗨̛Ơ𝗡𝗚 𝗧𝗔́𝗖 𝗧𝗢𝗔̀𝗡 𝗗𝗜̣̂N 📊
+                 ┄─━ ࿇ ━─┄
+                 🌟 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 🌟
+                 𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                 ┄─━ ࿇ ━─┄
+
+                 ⚠️ 𝗟𝗨̛𝗨 𝗬́ 𝗤𝗨𝗔𝗡 𝗧𝗥𝗢̣𝗡𝗚 ⚠️
+      ╔═════*.·:·.✧ ✦ ✧.·:·.*═════╗
+                  📌 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 📌
+                  🔔 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                  ❌ 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+      ╚═════*.·:·.✧ ✦ ✧.·:·.*═════╝`
+            },
+            {
+                title: "Flower Connect (Chữ Thảo)",
+                template: `           .•°¤*(¯\`★´¯)*¤°•.
+        🌸 𝓕𝓵𝓸𝔀𝓮𝓻 𝓒𝓸𝓷𝓷𝓮𝓬𝓽 - ${convertToUnicode(userInput, 'cursive')} 🌸
+           °•.¤*(¯\`★´¯)*¤•.°
+
+                   ₊˚ʚ  PAYMENT ZONE ɞ˚₊
+                   ═⋯⋯⋯═
+                  🦋 MB Bank: 275887 🦋
+                   ═⋯⋯⋯═
+
+                   ₊˚ʚ OUR SERVICES ɞ˚₊
+                   ═⋯⋯⋯═
+                  ✨ 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 ✨
+                  𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝒯𝒾𝒌𝒕𝒐𝒌
+                   ═⋯⋯⋯═
+
+                   ₊˚ʚ ENGAGEMENT BOOST ɞ˚₊
+                   ═⋯⋯⋯═
+                  💖 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 💖
+                  𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                   ═⋯⋯⋯═
+
+                   ⚠️ 𝓝𝓞𝓣𝓔𝓢 ⚠️
+           •°¤*(¯\`★´¯)*¤°•.
+                 📍 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 📍
+                 ✅ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                 🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+           °•.¤*(¯\`★´¯)*¤•.°`
+            },
+            {
+                title: "Diamond Social (Bold Italic Sans)",
+                template: `           ◦•●◉✿ 𝐃𝐢𝐚𝐦𝐨𝐧𝐝 𝐒𝐨𝐜𝐢𝐚𝐥 - ${convertToUnicode(userInput, 'bold-italic-sans-serif')} ✿◉●•◦
+                          ˚✧₊⁎⁺˳✧༚
+
+             💰 𝗧𝗛𝗢̂𝗡𝗚 𝗧𝗜𝗡 𝗧𝗛𝗔𝗡𝗛 𝗧𝗢𝗔́𝗡 💰
+             ╔═════════•°•✿•°•═════════╗
+                💲 MB Bank: 275887 💲
+             ╚═════════•°•✿•°•═════════╝
+
+               ✨ 𝐃𝐈̣𝐂𝐇 𝐕𝐔̣ 𝐂𝐇𝐔̉ 𝐋𝐔̛̣𝐂 ✨
+             ╔═════════•°•✿•°•═════════╗
+                🚀 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 🚀
+                𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝒯𝒾𝒌𝒕𝒐𝒌
+             ╚═════════•°•✿•°•═════════╝
+
+               📈 𝐃𝐈̣𝐂𝐇 𝐕𝐔̣ 𝐓𝐔̛Ơ𝐍𝐆 𝐓𝐀́𝐂 📈
+             ╔═════════•°•✿•°•═════════╗
+                💖 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 💖
+                𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+             ╚═════════•°•✿•°•═════════╝
+
+                        ❗ 𝑸𝑼𝒀 Đ𝑰̣𝑵𝑯 ❗
+                   ◦•●◉✿✿◉●•◦
+                       ✔️ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✔️
+                       ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                       ❌ 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+                   ◦•●◉✿✿◉●•◦`
+            },
+            {
+                title: "Premium Connect (Chữ Thảo)",
+                template: `               ╔⏤⏤⏤⏤╝❀╚⏤⏤⏤⏤╗
+              👑 𝒫𝓇𝑒𝓂𝒾𝓊𝓂 𝒞𝑜𝓃𝓃𝑒𝒸𝓉 - ${convertToUnicode(userInput, 'cursive')} 👑
+               ╚⏤⏤⏤⏤╗❀╔⏤⏤⏤⏤╝
+
+                       💸 𝐂𝐇𝐔𝐘𝐄̂̉𝐍 𝐊𝐇𝐎𝐀̉𝐍 💸
+               •───⋅☾ 𝑪𝑶𝑵𝑻𝑨𝑪𝑻 𝑼𝑺 ☽⋅───•
+                   MB Bank: 275887
+               •───⋅☾ 𝑪𝑶𝑵𝑻𝑨𝑪𝑻 𝑼𝑺 ☽⋅───•
+
+                     ✨ 𝐃𝐈̣𝐂𝐇 𝐕𝐔̣ 𝐍𝐎̂̉𝐈 𝐁𝐀̣̂𝐓 ✨
+               •───⋅☾ 𝑶𝑼𝑹 𝑺𝑬𝑹𝑽𝑰𝑪𝑬𝑺 ☽⋅───•
+                   🌟 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 🌟
+                  𝑭𝒂𝒄𝒆𝒃𝒐𝒐𝒌 - 𝑻𝒊𝒌𝒕𝒐𝒌
+               •───⋅☾ 𝑶𝑼𝑹 𝑺𝑬𝑹𝑽𝑰𝑪𝑬𝑺 ☽⋅───•
+
+                   📈 𝑻𝑼̛𝑶̛𝑵𝑮 𝑻𝑨́𝑪 𝑪𝑨𝑶 𝑪𝑨̂́𝑷 📈
+               •───⋅☾ 𝑴𝑶𝑹𝑬 𝑬𝑵𝑮𝑨𝑮𝑬𝑴𝑬𝑵𝑻 ☽⋅───•
+                   💖 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 💖
+                   𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+               •───⋅☾ 𝑴𝑶𝑹𝑬 𝑬𝑵𝑮𝑨𝑮𝑬𝑴𝑬𝑵𝑻 ☽⋅───•
+
+                     🔔 𝑸𝑼𝒀 Đ𝑰̣𝑵𝑯 𝑪𝑯𝑼𝑵𝑮 🔔
+               •───⋅☾ 𝑹𝑼𝑳𝑬𝑺 ☽⋅───•
+                   ✔️ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✔️
+                   ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                   🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+               •───⋅☾ 𝑹𝑼𝑳𝑬𝑺 ☽⋅───•`
+            },
+            {
+                title: "Vibrant Content (Chữ Thảo)",
+                template: `        ╭═══*.·:·.✧    ✦    ✧.·:·.*═══╮
+       🌷 𝓥𝓲𝓫𝓻𝓪𝓷𝓽 𝓒𝓸𝓷𝓽𝓮𝓷𝓽 - ${convertToUnicode(userInput, 'cursive')} 🌷
+        ╰═══*.·:·.✧    ✦    ✧.·:·.*═══╯
+
+                      💰 ℂℍ𝕌𝒀𝑬̂̉𝑵 𝕂𝑯𝕆𝔸̉ℕ 💰
+                      ═◦○◦═
+                        MB Bank: 275887
+                      ═◦○◦═
+
+                      ✨ 𝔻𝕀̣ℂℍ 𝕍𝕌̣ Đ𝕆̣̂ℂ Đ𝔸́𝕆 ✨
+                      ═◦○◦═
+                        🚀 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 🚀
+                        𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                      ═◦○◦═
+
+                      📈 𝕄𝕆̛̉ ℝ𝕆̣̂ℕ𝔾 𝕋𝕌̛Ơℕ𝔾 𝕋𝔸́ℂ 📈
+                      ═◦○◦═
+                        💖 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 💖
+                        𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                      ═◦○◦═
+
+                            ⚠️ 𝕃𝕌̛𝕌 𝕐́ ⚠️
+        ╭═══*.·:·.✧    ✦    ✧.·:·.*═══╮
+                        ✔️ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✔️
+                        🔔 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                        ❌ 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+        ╰═══*.·:·.✧    ✦    ✧.·:·.*═══╯`
+            },
+            {
+                title: "Celestial Media (Chữ Thảo)",
+                template: `           *＊✿❀　𝒞𝑒𝓁𝑒𝓈𝓉𝒾𝒶𝓁 𝑀𝑒𝒹𝓲𝓪 - ${convertToUnicode(userInput, 'cursive')} 　❀✿＊*
+                               ✧༺♥༻✧
+
+                        💸 𝕮𝖍𝖚𝖞𝖊̂̉𝖓 𝕶𝖍𝖔𝖆̉𝖓 💸
+                        ⫘⫘⫘⫘⫘⫘
+                          MB Bank: 275887
+                        ⫘⫘⫘⫘⫘⫘
+
+                        🚀 𝕯𝖎̣𝖈𝖍 𝖁𝖚̣ 𝕳𝖆̀𝖓𝖌 Đ𝖆̂̀𝖚 🚀
+                        ⫘⫘⫘⫘⫘⫘
+                          ✨ 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 ✨
+                          𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                        ⫘⫘⫘⫘⫘⫘
+
+                        💖 𝕯𝖎̣𝖈𝖍 𝖁𝖚̣ 𝕿𝖚̛𝖔̛𝖓𝖌 𝕿𝖆́𝖈 💖
+                        ⫘⫘⫘⫘⫘⫘
+                          📈 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 📈
+                          𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                        ⫘⫘⫘⫘⫘⫘
+
+                          🚨 𝕷𝖚̛𝖚 𝖄́ 𝕼𝖚𝖆𝖓 𝕿𝖗𝖔̣𝖓𝖌 🚨
+           *＊✿❀　❀✿＊*
+                          ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                          ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                          🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+           *＊✿❀　❀✿＊*`
+            },
+            {
+                title: "Love Your Social (Chữ Thảo)",
+                template: `           ༶•┈┈⛧┈┈•༶
+           💖 𝐿𝑜𝓋𝑒 𝒴𝑜𝓊𝓇 𝒮𝑜𝒸𝒾𝒶𝓁 - ${convertToUnicode(userInput, 'cursive')} 💖
+           ༶•┈┈⛧┈┈•༶
+
+                        💰 𝕮𝖍𝖚𝖞𝖊̂̉𝖓 𝕶𝖍𝖔𝖆̉n 💰
+                        ━━━━━━ ◦ ❖ ◦ ━━━━━━
+                          MB Bank: 275887
+                        ━━━━━━ ◦ ❖ ◦ ━━━━━━
+
+                        ✨ 𝕯𝖎̣𝖈𝖍 𝖁𝖚̣ Đ𝖔̣̂𝖙 𝕻𝖍𝖆́ ✨
+                        ━━━━━━ ◦ ❖ ◦ ━━━━━━
+                          🚀 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 🚀
+                          𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                        ━━━━━━ ◦ ❖ ◦ ━━━━━━
+
+                   📈 𝕯𝖎̣𝖈𝖍 𝖁𝖚̣ 𝕿𝖚̛𝖔̛𝖓𝖌 𝕿𝖆́𝖈 𝕱𝖈 & 𝕿𝖙 📈
+                        ━━━━━━ ◦ ❖ ◦ ━━━━━━
+                          💖 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 💖
+                          𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                        ━━━━━━ ◦ ❖ ◦ ━━━━━━
+
+                        🚨 𝕷𝖚̛𝖚 𝖄́ 𝕿𝖗𝖔̣𝖓𝖌 🚨
+           ༶•┈┈⛧┈┈•༶
+                          ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                          ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                          🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+           ༶•┈┈⛧┈┈•༶`
+            },
+            {
+                title: "Global Connect (Chữ Thảo)",
+                template: `          ◦.¸¸. ◦✿ 𝒢𝓁𝑜𝒷𝒶𝓁 𝒞𝑜𝓃𝓃𝑒𝒸𝓉 - ${convertToUnicode(userInput, 'cursive')} ✿◦.¸¸. ◦
+                               ✧─────⋆ ☆ ⋆─────✧
+
+                              💸 𝗖𝗛𝗨𝗬𝗘̂̉𝗡 𝗞𝗛𝗢𝗔̉𝗡 💸
+                      •·················•·················•
+                                MB Bank: 275887
+                      •·················•·················•
+
+                              ✨ 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑪𝑯𝑰́𝑵𝑯 ✨
+                      •·················•·················•
+                                🚀 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 🚀
+                                𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                      •·················•·················•
+
+                             📈 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑩𝑶̂̉ 𝑺𝑼𝑵𝑮 📈
+                      •·················•·················•
+                                💖 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 💖
+                                𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                      •·················•·················•
+
+                                  📌 𝑳𝑼̛𝑼 𝒀́ 📌
+                             ◦.¸¸. ◦✿✿◦.¸¸. ◦
+                                 ✔️ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✔️
+                                 ⚠️ 𝑪𝒉𝑒𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                                 🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+                             ◦.¸¸. ◦✿✿◦.¸¸. ◦`
+            },
+            {
+                title: "Golden Social (Chữ Thảo)",
+                template: `                 •.¸♡ 𝒢𝑜𝓁𝒹𝑒𝓃 𝒮𝑜𝒸𝒾𝒶𝓁 - ${convertToUnicode(userInput, 'cursive')} ♡¸.•
+                 ¸.·*¨) ¸.·*¨)
+                 (¸.·´ (¸.·´
+
+                            💰 𝘾𝙃𝑼𝒀𝑬̂̉𝑵 𝑲𝑯𝑶𝑨̉𝑵 💰
+                    ─━━═════⊰⊱ ╏𖢨╏ ⊰⊱═════━━─
+                              MB Bank: 275887
+                    ─━━═════⊰⊱ ╏𖢨╏ ⊰⊱═════━━─
+
+                          ✨ 𝘿𝑰̣𝑪𝑯 𝑽𝑼̣ 𝘾𝙊̂́𝙏 𝙇𝙊̃𝑰 ✨
+                    ─━━═════⊰⊱ ╏𖢨╏ ⊰⊱═════━━─
+                              🌟 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 🌟
+                              𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                    ─━━═════⊰⊱ ╏𖢨╏ ⊰⊱═════━━─
+
+                    📈 𝘿𝑰̣𝑪𝑯 𝑽𝑼̣ 𝙏𝑼̛𝑶̛𝑵𝑮 𝙏𝘼́𝘾 𝙀𝑿𝙏𝙍𝘼 📈
+                    ─━━═════⊰⊱ ╏𖢨╏ ⊰⊱═════━━─
+                              💖 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 💖
+                              𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                    ─━━═════⊰⊱ ╏𖢨╏ ⊰⊱═════━━─
+
+                                ❗ 𝙇𝑼̛𝑼 𝙔́ ❗
+                           •.¸♡ ♡¸.•
+                              ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                              ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                              🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+                           •.¸♡ ♡¸.•`
+            },
+            {
+                title: "Star Connect (Chữ Thảo)",
+                template: `             .・。.・゜✭・.・✫・゜・。.
+            🌠 𝒮𝓉𝒶𝓇 𝒞𝑜𝓃𝓃𝑒𝒸𝓉 - ${convertToUnicode(userInput, 'cursive')} 🌠
+             .・。.・゜✭・.・✫・゜・。.
+
+                        💸 𝘾𝑯𝑼𝒀𝑬̂̉𝑵 𝑲𝑯𝑶𝑨̉𝑵 💸
+                       ╭── ⋅ ⋅ ── ✩ ── ⋅ ⋅ ──╮
+                               MB Bank: 275887
+                       ╰── ⋅ ⋅ ── ✩ ── ⋅ ⋅ ──╯
+
+                         ✨ 𝘿𝑰̣𝑪𝑯 𝑽𝑼̣ 𝙁𝙊𝑳𝙇𝙊𝑾 ✨
+                       ╭── ⋅ ⋅ ── ✩ ── ⋅ ⋅ ──╮
+                               🚀 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 🚀
+                               𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                       ╰── ⋅ ⋅ ── ✩ ── ⋅ ⋅ ──╯
+
+                         💖 𝘿𝑰̣𝑪𝑯 𝑽𝑼̣ 𝙏𝑼̛𝑶̛𝑵𝑮 𝙏𝘼́𝘾 💖
+                       ╭── ⋅ ⋅ ── ✩ ── ⋅ ⋅ ──╮
+                               📈 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 📈
+                               𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                       ╰── ⋅ ⋅ ── ✩ ── ⋅ ⋅ ──╯
+
+                                 🚨 𝙇𝑼̛𝑼 𝙔́ 🚨
+             .・。.・゜✭・.・✫・゜・。.
+                                 ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                                 ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                                 🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+             .・。.・゜✭・.・✫・゜・。.`
+            },
+            {
+                title: "Pink Connect (Chữ Thảo)",
+                template: `                        °✿°•.❀.•°✿°
+                      🌸 𝒫𝒾𝓃𝓀 𝒞𝑜𝓃𝓃𝑒𝒸𝓉 - ${convertToUnicode(userInput, 'cursive')} 🌸
+                        °✿°•.❀.•°✿°
+
+                                💸 𝑪𝑯𝑼𝒀𝑬̂̉𝑵 𝑲𝑯𝑶𝑨̉𝑵 💸
+                                ─── ⋆⋅☆⋅⋆ ───
+                                  MB Bank: 275887
+                                ─── ⋆⋅☆⋅⋆ ───
+
+                            ✨ 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑴𝑶̛́𝑰 𝑵𝑯𝑨̂́𝑻 ✨
+                                ─── ⋆⋅☆⋅⋆ ───
+                                  🚀 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 🚀
+                                  𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                                ─── ⋆⋅☆⋅⋆ ───
+
+                            💖 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑩𝑶̂̉ 𝑻𝑹𝑶̛̣ 💖
+                                ─── ⋆⋅☆⋅⋆ ───
+                                  📈 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 📈
+                                  𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                                ─── ⋆⋅☆⋅⋆ ───
+
+                                  📌 𝑳𝑼̛𝑼 𝒀́ 📌
+                        °✿°•.❀.•°✿°
+                                  ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                                  ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                                  🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+                        °✿°•.❀.•°✿°`
+            },
+            {
+                title: "Colorful Social (Chữ Thảo)",
+                template: `          .•°¤*°•.¸¸.•°¤*°•.
+         🌈 𝒞𝑜𝓁𝑜𝓇𝒻𝓊𝓁 𝒮𝑜𝒸𝓲𝓪𝓵 - ${convertToUnicode(userInput, 'cursive')} 🌈
+          °•.¸¸.•°¤*°•.¸¸.•°
+
+                         💸 𝑪𝑯𝑼𝒀𝑬̂̉𝑵 𝑲𝑯𝑶𝑨̉𝑵 💸
+                        ━━━━━ • ஜ • ❈ • ஜ • ━━━━━
+                                MB Bank: 275887
+                        ━━━━━ • ஜ • ❈ • ஜ • ━━━━━
+
+                          ✨ 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑷𝑯𝑶̂̉ 𝑩𝑰𝑬̂́𝑵 ✨
+                        ━━━━━ • ஜ • ❈ • ஜ • ━━━━━
+                                🚀 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 🚀
+                                𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                        ━━━━━ • ஜ • ❈ • ஜ • ━━━━━
+
+                           💖 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑴𝑶̛̉ 𝑹𝑶̣̂𝑵𝑮 💖
+                        ━━━━━ • ஜ • ❈ • ஜ • ━━━━━
+                                📈 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 📈
+                                𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                        ━━━━━ • ஜ • ❈ • ஜ • ━━━━━
+
+                                  🚨 𝑳𝑼̛𝑼 𝒀́ 🚨
+          .•°¤*°•.¸¸.•°¤*°•.
+                                  ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                                  ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                                  🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+          °•.¸¸.•°¤*°•.¸¸.•°`
+            },
+            {
+                title: "Nature Connect (Chữ Thảo)",
+                template: `          (っ◔◡◔)っ ♥ 𝒩𝒶𝓉𝓊𝓇𝑒 𝒞𝑜𝓃𝓃𝑒𝒸𝓉 - ${convertToUnicode(userInput, 'cursive')} ♥
+                               ═════ ◈ ═════
+
+                             💸 𝑪𝑯𝑼𝒀𝑬̂̉𝑵 𝑲𝑯𝑶𝑨̉𝑵 💸
+                             ೋ❀❀ೋ═══ ═╗
+                               MB Bank: 275887
+                             ╚═ ═══ೋ❀❀ೋ
+
+                             ✨ 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑪𝑶̛ 𝑩𝑨̉𝑵 ✨
+                             ೋ❀❀ೋ═══ ═╗
+                               🚀 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 🚀
+                               𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                             ╚═ ═══ೋ❀❀ೋ
+
+                           💖 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑷𝑯𝑨́𝑻 𝑻𝑹𝑰𝑬̂̉𝑵 💖
+                             ೋ❀❀ೋ═══ ═╗
+                               📈 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 📈
+                               𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                             ╚═ ═══ೋ❀❀ೋ
+
+                                 🚨 𝑳𝑼̛𝑼 𝒀́ 🚨
+                               ═════ ◈ ═════
+                                 ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                                 ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                                 🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+                               ═════ ◈ ═════`
+            },
+            {
+                title: "Mystic Social (Chữ Thảo)",
+                template: `                      •◦ೋ•◦❥•◦ೋ•
+                     🔮 𝑀𝓎𝓈𝓉𝒾𝒸 𝒮𝑜𝒸𝒾𝒶𝓁 - ${convertToUnicode(userInput, 'cursive')} 🔮
+                      •◦ೋ•◦❥•◦ೋ•
+
+                                 💸 𝑪𝑯𝑼𝒀𝑬̂̉𝑵 𝑲𝑯𝑶𝑨̉𝑵 💸
+                                 ▬▬▬▬▬▬▬▬▬▬
+                                   MB Bank: 275887
+                                 ▬▬▬▬▬▬▬▬▬▬
+
+                                 ✨ 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑪𝑯𝑰́𝑵𝑯 ✨
+                                 ▬▬▬▬▬▬▬▬▬▬
+                                   🚀 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 🚀
+                                   𝐹𝒶𝒸𝑒𝒷𝑜𝑜𝓀 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                                 ▬▬▬▬▬▬▬▬▬▬
+
+                                 💖 𝑻𝑼̛𝑶̛𝑵𝑮 𝑻𝑨́𝑪 𝑯𝑰𝑬̣̂𝑼 𝑸𝑼𝑨̉ 💖
+                                 ▬▬▬▬▬▬▬▬▬▬
+                                   📈 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 📈
+                                   𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                                 ▬▬▬▬▬▬▬▬▬▬
+
+                                   🚨 𝑳𝑼̛𝑼 𝒀́ 🚨
+                      •◦ೋ•◦❥•◦ೋ•
+                                   ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                                   ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                                   🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+                      •◦ೋ•◦❥•◦ೋ•`
+            },
+            {
+                title: "Sparkle Connect (Chữ Thảo)",
+                template: `                 ∘◦ ☆ ◦∘
+             ✨ 𝓢𝓹𝓪𝓻𝓴𝓵𝓮 𝓒𝓸𝓷𝓷𝓮𝓬𝓽 - ${convertToUnicode(userInput, 'cursive')} ✨
+                 ◦∘ ☆ ∘◦
+
+                      💸 𝑪𝑯𝑼𝒀𝑬̂̉𝑵 𝑲𝑯𝑶𝑨̉𝑵 💸
+                      ════ ⋆★⋆ ════
+                         MB Bank: 275887
+                      ════ ⋆★⋆ ════
+
+                      🚀 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑵𝑶̂̉𝑰 𝑩𝑨̣̂𝑻 🚀
+                      ════ ⋆★⋆ ════
+                         ✨ 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 ✨
+                         𝑭𝒂𝒄𝒆𝒃𝒐𝒐𝒌 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                      ════ ⋆★⋆ ════
+
+                      💖 𝑻𝑼̛𝑶̛𝑵𝑮 𝑻𝑨́𝑪 𝑪𝑶̂𝑵𝑮 𝑯𝑰𝑬̣̂𝑼 💖
+                      ════ ⋆★⋆ ════
+                         📈 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 📈
+                         𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                      ════ ⋆★⋆ ════
+
+                           ❗ 𝑳𝑼̛𝑼 𝒀́ ❗
+                 ∘◦ ☆ ◦∘
+                           ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                           ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                           🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+                 ◦∘ ☆ ∘◦`
+            },
+            {
+                title: "Fortune Social (Chữ Thảo)",
+                template: `                 «-´´´´´´´´´´\`-»
+             🍀 𝓕𝓸𝓻𝓽𝓾𝓻𝓮 𝒮𝑜𝒸𝓲𝒶𝓵 - ${convertToUnicode(userInput, 'cursive')} 🍀
+                 «-´´´´´´´´´´\`-»
+
+                       💸 𝑪𝑯𝑼𝒀𝑬̂̉𝑵 𝑲𝑯𝑶𝑨̉𝑵 💸
+                      ━━━━ •𓆩♡𓆪• ━━━━
+                         MB Bank: 275887
+                      ━━━━ •𓆩♡𓆪• ━━━━
+
+                      🚀 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑪𝑯𝑰́𝑵𝑯 🚀
+                      ━━━━ •𓆩♡𓆪• ━━━━
+                         ✨ 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 ✨
+                         𝑭𝒂𝒄𝒆𝒃𝒐𝒐𝒌 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                      ━━━━ •𓆩♡𓆪• ━━━━
+
+                      💖 𝑻𝑼̛𝑶̛𝑵𝑮 𝑻𝑨́𝑪 𝑯𝑰𝑬̣̂𝑼 𝑸𝑼𝑨̉ 💖
+                      ━━━━ •𓆩♡𓆪• ━━━━
+                         📈 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 📈
+                         𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                      ━━━━ •𓆩♡𓆪• ━━━━
+
+                           ❗ 𝑳𝑼̛𝑼 𝒀́ ❗
+                 «-´´´´´´´´´´\`-»
+                           ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                           ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                           🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+                 «-´´´´´´´´´´\`-»`
+            },
+            {
+                title: "Blue Connect (Chữ Thảo)",
+                template: `                 ⋆˙⟡♡
+             💙 𝓑𝓵𝓾𝓮 𝓒𝓸𝓷𝓷𝓮𝓬𝓽 - ${convertToUnicode(userInput, 'cursive')} 💙
+                 ♡⟡˙⋆
+
+                      💸 𝑪𝑯𝑼𝒀𝑬̂̉𝑵 𝑲𝑯𝑶𝑨̉𝑵 💸
+                      ━━━━━━ ◦ ❖ ◦ ━━━━━━
+                         MB Bank: 275887
+                      ━━━━━━ ◦ ❖ ◦ ━━━━━━
+
+                      🚀 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑻𝑶̂́𝑰 𝑼̛𝑼 🚀
+                      ━━━━━━ ◦ ❖ ◦ ━━━━━━
+                         ✨ 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 ✨
+                         𝑭𝒂𝒄𝒆𝒃𝒐𝒐𝒌 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                      ━━━━━━ ◦ ❖ ◦ ━━━━━━
+
+                      💖 𝑻𝑼̛𝑶̛𝑵𝑮 𝑻𝑨́𝑪 Đ𝑨 𝑫𝑨̣𝑵𝑮 💖
+                      ━━━━━━ ◦ ❖ ◦ ━━━━━━
+                         📈 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 📈
+                         𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                      ━━━━━━ ◦ ❖ ◦ ━━━━━━
+
+                           ❗ 𝑳𝑼̛𝑼 𝒀́ ❗
+                 ⋆˙⟡♡
+                           ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                           ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                           🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+                 ♡⟡˙⋆`
+            },
+            {
+                title: "Royal Social (Chữ Thảo)",
+                template: `                 ✧༺♥༻✧
+             👑 𝓡𝓸𝔂𝓪𝓵 𝒮𝑜𝒸𝓲𝒶𝓵 - ${convertToUnicode(userInput, 'cursive')} 👑
+                 ✧༺♥༻✧
+
+                      💸 𝑪𝑯𝑼𝒀𝑬̂̉𝑵 𝑲𝑯𝑶𝑨̉𝑵 💸
+                      ═◦○◦═
+                         MB Bank: 275887
+                      ═◦○◦═
+
+                      🚀 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ 𝑷𝑹𝑶 🚀
+                      ═◦○◦═
+                         ✨ 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 ✨
+                         𝑭𝒂𝒄𝒆𝒃𝒐𝒐𝒌 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                      ═◦○◦═
+
+                      💖 𝑻𝑼̛𝑶̛𝑵𝑮 𝑻𝑨́𝑪 𝑻𝑶̂́𝑰 Đ𝑨 💖
+                      ═◦○◦═
+                         📈 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 📈
+                         𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                      ═◦○◦═
+
+                           ❗ 𝑳𝑼̛𝑼 𝒀́ ❗
+                 ✧༺♥༻✧
+                           ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                           ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                           🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+                 ✧༺♥༻✧`
+            },
+            {
+                title: "Purple Power (Chữ Thảo)",
+                template: `                 •◦ೋ•◦❥•◦ೋ•
+             💜 𝓟𝓾𝓻𝓹𝓵𝓮 𝓟𝓸𝔀𝓮𝓻 - ${convertToUnicode(userInput, 'cursive')} 💜
+                 •◦ೋ•◦❥•◦ೋ•
+
+                      💸 𝑪𝑯𝑼𝒀𝑬̂̉𝑵 𝑲𝑯𝑶𝑨̉𝑵 💸
+                      ▬▬▬▬▬▬▬▬▬▬
+                         MB Bank: 275887
+                      ▬▬▬▬▬▬▬▬▬▬
+
+                      🚀 𝑫𝑰̣𝑪𝑯 𝑽𝑼̣ Đ𝑨̂̀𝑼 𝑵𝑮𝑨̀𝑵𝑯 🚀
+                      ▬▬▬▬▬▬▬▬▬▬
+                         ✨ 𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘 ✨
+                         𝑭𝒂𝒄𝒆𝒃𝒐𝒐𝒌 - 𝑻𝒊𝒌𝒕𝒐𝒌
+                      ▬▬▬▬▬▬▬▬▬▬
+
+                      💖 𝑻𝑼̛𝑶̛𝑵𝑮 𝑻𝑨́𝑪 𝑯𝑰𝑬̣̂𝑼 𝑸𝑼𝑨̉ 💖
+                      ▬▬▬▬▬▬▬▬▬▬
+                         📈 𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆 📈
+                         𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+                      ▬▬▬▬▬▬▬▬▬▬
+
+                           ❗ 𝑳𝑼̛𝑼 𝒀́ ❗
+                 •◦ೋ•◦❥•◦ೋ•
+                           ✅ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ✅
+                           ⚠️ 𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+                           🚫 𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎
+                 •◦ೋ•◦❥•◦ೋ•`
+            },
+             {
+                title: "Tus Check Out (Gốc)",
+                template: `┊        ┊       ┊       ♡        ┊
+┊        ┊       ┊                ˚  ♡
+┊        ┊       ♡       ⋆             +
+♡    ⋆  ┊    .
+     +     ♡
+  ───── ୨${convertToUnicode(userInput, 'bold-italic')}୧ ────
+                    ˙✧˖°⋆｡˚⟡ ݁₊ ౨ৎ⋆✴︎˚｡⋆
+﹒˚ ₊ ︵﹒⊹ ๑  𝒄𝒉𝒖𝒚𝒆̂̉𝒏 𝒌𝒉𝒐𝒂̉𝒏 ︵︵ ๑ ⊹︵
+ ╭────── · · ୨୧ · · ──────╮
+                 MB Bank: 275887
+ ╰────── · · ୨୧ · · ──────╯
+    ﹒˚ ₊ ︵﹒⊹ ๑ ₊˚𝒅𝒊̣𝒄𝒉 𝒗𝒖̣ ︵︵ ๑ ⊹﹒︵
+ ╭────── · · ୨୧ · · ──────╮
+                     𝑵𝒉𝒂̣̂𝒏 𝒕𝒂̆𝒏𝒈 𝒇𝒐𝒍𝒍𝒐𝒘
+                    𝑭𝒂𝒄𝒆𝒃𝒐𝒐𝒌 - 𝑻𝒊𝒌𝒕𝒐𝒌
+ ╰────── · · ୨୧ · · ──────╯
+    ﹒˚ ₊ ︵﹒⊹ ๑ ₊˚𝒅𝒊̣𝒄𝒉 𝒗𝒖̣ ︵︵ ๑ ⊹﹒︵
+ ╭────── · · ୨୧ · · ──────╮
+                       𝑻𝒂̆𝒏𝒈 𝑻𝒚𝒎/𝑳𝒊𝒌𝒆
+               𝑽𝒊𝒆𝒘 - 𝑺𝒉𝒂𝒓𝒆 - 𝑪𝒐𝒎𝒎𝒆𝒏𝒕
+ ╰────── · · ୨୧ · · ──────╯
+                    ˚ 𝜗𝜚˚⋆ 𝑳𝒖̛𝒖 𝒚́  𓆝⋆  ๋༘ ࣭
+                     𐙚₊˚ 𝑩𝒂𝒏𝒌 = 𝒃𝒊𝒍𝒍 ୨୧
+           ౨ৎ˚𝑪𝒉𝒆𝒄𝒌 𝒔𝒕𝒌 𝒕𝒓𝒖̛𝒐̛́𝒄 𝒌𝒉𝒊 𝒈𝒊𝒂𝒐 𝒅𝒊̣𝒄𝒉
+               𝒃𝒂𝒏𝒌 𝒔𝒂𝒊 𝒌 𝒄𝒉𝒊̣ chịu 𝒕𝒓𝒂́𝒄𝒉 𝒏𝒉𝒊ệ𝒎`
+            }
+        ];
+
+        // Lặp qua các mẫu và hiển thị chúng
+        samples.forEach(sample => {
+            outputContainer.appendChild(createSampleCard(sample.title, sample.template));
+        });
+    }
+
+    // Event listener for button click
+    applyButton.addEventListener('click', renderSamples);
+
+    // Initial render when page loads
+    renderSamples();
+});
+        /* --- script.js end --- */
+    </script>
+</body>
+</html>
